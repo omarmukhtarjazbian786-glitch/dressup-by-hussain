@@ -10,16 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
-      - run: flutter create . --project-name business_manager --platforms android
-      - run: flutter pub get
-      - run: flutter build apk --release
+
+      - name: Create Android Project Structure
+        run: flutter create . --project-name business_manager --platforms android
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Business-App-APK
           path: build/app/outputs/flutter-apk/app-release.apk
-          
